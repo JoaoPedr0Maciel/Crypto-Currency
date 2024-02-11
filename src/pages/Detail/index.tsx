@@ -24,7 +24,7 @@ export const Detail = () => {
     fetch(`https://api.coincap.io/v2/assets/${crypto}`)
       .then((response) => {
         if (!response.ok) {
-          navigate("/");
+          throw new Error("Failed to fetch coin data");
         }
         return response.json();
       })
@@ -33,6 +33,7 @@ export const Detail = () => {
       })
       .catch((error) => {
         console.error("Error fetching coin data:", error);
+        navigate("/");
       });
   }, []);
 
