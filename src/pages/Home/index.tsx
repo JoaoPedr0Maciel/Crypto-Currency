@@ -55,7 +55,7 @@ export function Home() {
     <main className="h-full flex flex-col justify-center items-center ">
       <form onSubmit={handleSearch} className="flex gap-2">
         <input
-          className="w-[550px] h-[2.5rem] font-bold max-sm:w-[300px] pl-2 rounded-md outline-none border-none text-black"
+          className="w-[550px] h-[2.5rem] max-custom-md:w-[250px] font-bold max-sm:w-[300px] pl-2 rounded-md outline-none border-none text-black"
           type="text"
           placeholder="Enter the name of the cryptocurrency"
           value={input}
@@ -66,8 +66,8 @@ export function Home() {
         </button>
       </form>
 
-      <table className="w-[85%] max-sm:border-0   mt-[3rem] border-separate border-spacing-y-[1rem]">
-        <thead className="uppercase">
+      <table className="w-[80%] max-sm:border-0   mt-[3rem] border-separate border-spacing-y-[1rem]">
+        <thead className="uppercase max-sm:text-sm  max-custom-md:">
           <tr>
             <th scope="col" className="w-[100px] h-[100px]">
               coin
@@ -86,8 +86,11 @@ export function Home() {
         <tbody className="">
           {isLoading ? (
             coins?.map((coin) => (
-              <tr key={coin.name} className="bg-[#1d1c20] mb-4 h-[4rem] ">
-                <td className="text-center rounded-l-xl font-bold ">
+              <tr
+                key={coin.name}
+                className="bg-[#1d1c20] max-sm:text-sm mb-4 h-[4rem]"
+              >
+                <td className="text-center max-custom-md:text-md rounded-l-xl font-bold ">
                   <Link
                     className="transition duration-[.5s] hover:text-[#3098FF]"
                     to={`/detail/${coin.id}`}
@@ -95,17 +98,21 @@ export function Home() {
                     {coin.name} | {coin.symbol}
                   </Link>
                 </td>
-                <td className="text-center text-[#BBB] font-bold">
+                <td className="text-center text-[#BBB] max-sm:text-sm font-bold">
                   {parseFloat(coin.priceUsd).toLocaleString("en-US", {
                     style: "currency",
                     currency: "USD",
                   })}
                 </td>
                 <td className="text-center text-[#BBB] font-bold">
-                  {parseFloat(coin.marketCapUsd).toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  })}
+                  {window.innerWidth < 448
+                    ? `$${(parseFloat(coin.marketCapUsd) / 1000000000).toFixed(
+                        0
+                      )}B`
+                    : parseFloat(coin.marketCapUsd).toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      })}
                 </td>
                 <td
                   className={`text-center rounded-r-xl font-bold ${
