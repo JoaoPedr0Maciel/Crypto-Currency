@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface CoinsProps {
   name: string;
   image: string;
   marketCapUsd: string;
   priceUsd: string;
-  vwap24Hr: string;
+  changePercent24Hr: string;
+  symbol: string;
+  id: string;
 }
 
 interface DataProps {
@@ -16,6 +18,15 @@ interface DataProps {
 
 export function Home() {
   const [coins, setCoins] = useState<CoinsProps[]>([]);
+  const [input, setInput] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    if (input === "") return;
+    const inputLowerCase = input.toLowerCase();
+    navigate(`/detail/${inputLowerCase}`);
+  };
 
   useEffect(() => {
     function getData() {
@@ -39,28 +50,30 @@ export function Home() {
 
   return (
     <main className="h-full flex flex-col justify-center items-center">
-      <form action="" className="flex gap-2">
+      <form onSubmit={handleSearch} className="flex gap-2">
         <input
-          className="w-[550px] h-[2rem] max-sm:w-[300px] pl-2 rounded-md outline-none border-none text-black"
+          className="w-[550px] h-[2.5rem] max-sm:w-[300px] pl-2 rounded-md outline-none border-none text-black"
           type="text"
-          placeholder="Digite a sigla da Crypto-Moeda"
+          placeholder="Enter the name of the cryptocurrency"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
-        <button className="gap-3  font-bold ">
-          <CiSearch className="text-3xl" />
+        <button type="submit" className="gap-3  font-bold ">
+          <CiSearch className="text-4xl" />
         </button>
       </form>
 
-      <table className="w-[90%] mt-[3rem]">
+      <table className="w-[90%] mt-[3rem] border-separate border-spacing-y-[1rem]">
         <thead className="uppercase">
           <tr>
             <th scope="col" className="w-[100px] h-[100px]">
-              Moeda
+              coin
             </th>
             <th scope="col" className="w-[100px] h-[100px]">
-              Valor de Mercado
+              price
             </th>
             <th scope="col" className="w-[100px] h-[100px]">
-              Preço
+              market value
             </th>
             <th scope="col" className="w-[100px] h-[100px]">
               Volume
@@ -69,12 +82,14 @@ export function Home() {
         </thead>
         <tbody className="w-[70%]">
           {coins?.map((coin) => (
-            <tr
-              key={coin.name}
-              className="bg-[#1d1c20]  h-[4rem] border-collapse border-spacing-y-4"
-            >
-              <td className="text-center rounded-l-xl ">
-                <Link to="">{coin.name}</Link>
+            <tr key={coin.name} className="bg-[#1d1c20] mb-4 h-[4rem]">
+              <td className="text-center rounded-l-xl font-bold ">
+                <Link
+                  className="hover:text-[#3098FF]"
+                  to={`/detail/${coin.id}`}
+                >
+                  {coin.name} | {coin.symbol}
+                </Link>
               </td>
               <td className="text-center text-[#BBB] font-bold">
                 {parseFloat(coin.priceUsd).toLocaleString("en-US", {
@@ -88,8 +103,14 @@ export function Home() {
                   currency: "USD",
                 })}
               </td>
-              <td className="text-center rounded-r-xl text-[#12f98a] font-bold">
-                {parseFloat(coin.vwap24Hr).toFixed(2)}
+              <td
+                className={`text-center rounded-r-xl font-bold ${
+                  parseFloat(coin.changePercent24Hr) >= 0
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {parseFloat(coin.changePercent24Hr).toFixed(2)}
               </td>
             </tr>
           ))}
