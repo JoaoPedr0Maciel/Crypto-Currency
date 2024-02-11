@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 
 interface CoinData {
@@ -20,6 +21,7 @@ export const Detail = () => {
   const [coinData, setCoinData] = useState<CoinData | null>(null);
   const { crypto } = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
     fetch(`https://api.coincap.io/v2/assets/${crypto}`)
       .then((response) => {
@@ -46,7 +48,7 @@ export const Detail = () => {
           </h1>
           <p className="text-center mb-[3rem] font-bold">{coinData.symbol}</p>
 
-          <div className="bg-[#100F10] flex flex-col justify-center  gap-1 rounded-lg h-[170px]  w-[400px] font-bold">
+          <div className="bg-[#100F10] flex flex-col max-sm:w-[320px] justify-center  gap-1 rounded-lg h-[170px]  w-[400px] font-bold">
             <p className="flex justify-between mx-5">
               <span className="italic">Rank:</span> {coinData.rank}º
             </p>
@@ -76,7 +78,7 @@ export const Detail = () => {
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <AiOutlineLoading3Quarters className="text-3xl rotating" />
       )}
     </div>
   );
