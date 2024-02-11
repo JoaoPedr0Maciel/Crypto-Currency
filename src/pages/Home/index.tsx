@@ -85,7 +85,7 @@ export function Home() {
             <tr key={coin.name} className="bg-[#1d1c20] mb-4 h-[4rem]">
               <td className="text-center rounded-l-xl font-bold ">
                 <Link
-                  className="hover:text-[#3098FF]"
+                  className="transition duration-[.5s] hover:text-[#3098FF]"
                   to={`/detail/${coin.id}`}
                 >
                   {coin.name} | {coin.symbol}
