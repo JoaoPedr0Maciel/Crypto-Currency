@@ -76,8 +76,22 @@ export function Home() {
               price
             </th>
             <th scope="col" className="w-[100px] h-[100px]">
-              market value
+              <span
+                className={
+                  window.innerWidth < 448 ? "hidden sm:inline" : "inline"
+                }
+              >
+                market value
+              </span>
+              <span
+                className={
+                  window.innerWidth < 448 ? "inline sm:hidden" : "hidden"
+                }
+              >
+                market
+              </span>
             </th>
+
             <th scope="col" className="w-[100px] h-[100px]">
               Volume
             </th>
@@ -106,14 +120,19 @@ export function Home() {
                 </td>
                 <td className="text-center text-[#BBB] font-bold">
                   {window.innerWidth < 448
-                    ? `$${(parseFloat(coin.marketCapUsd) / 1000000000).toFixed(
-                        0
-                      )}B`
+                    ? parseFloat(coin.marketCapUsd) >= 1000000000
+                      ? `$${(
+                          parseFloat(coin.marketCapUsd) / 1000000000
+                        ).toFixed(2)}B`
+                      : `$${(parseFloat(coin.marketCapUsd) / 1000000).toFixed(
+                          2
+                        )}M`
                     : parseFloat(coin.marketCapUsd).toLocaleString("en-US", {
                         style: "currency",
                         currency: "USD",
                       })}
                 </td>
+
                 <td
                   className={`text-center rounded-r-xl font-bold ${
                     parseFloat(coin.changePercent24Hr) >= 0
